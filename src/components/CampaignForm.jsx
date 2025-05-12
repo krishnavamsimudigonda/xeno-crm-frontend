@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import MessageGenerator from "./MessageGenerator"; // ✅ Make sure this import is here
+import MessageGenerator from "./MessageGenerator";
 
 const CampaignForm = () => {
   const [name, setName] = useState("");
@@ -24,51 +24,67 @@ const CampaignForm = () => {
   };
 
   return (
-    <div className="bg-white p-4 shadow-md rounded-md w-full max-w-xl">
-      <h2 className="text-xl font-semibold mb-4">📢 Create Campaign</h2>
+    <div className="space-y-6">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 animate-slide-up"
+      >
+        <div>
+          <label className="block mb-1 font-medium text-gray-700">
+            Campaign Name
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none text-lg"
+            placeholder="E.g. High Value Customers"
+            required
+          />
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Campaign Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border p-2 w-full rounded"
-          required
-        />
+        <div>
+          <label className="block mb-1 font-medium text-gray-700">
+            Audience Rule (JSON)
+          </label>
+          <textarea
+            value={rule}
+            onChange={(e) => setRule(e.target.value)}
+            rows={3}
+            className="w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono text-sm"
+            required
+          />
+        </div>
 
-        <textarea
-          placeholder='Rule (e.g. { "totalSpend": { "$gt": 5000 } })'
-          value={rule}
-          onChange={(e) => setRule(e.target.value)}
-          rows={3}
-          className="border p-2 w-full rounded font-mono"
-          required
-        />
-
-        <textarea
-          placeholder="Message to send"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          rows={2}
-          className="border p-2 w-full rounded"
-          required
-        />
+        <div>
+          <label className="block mb-1 font-medium text-gray-700">
+            Message
+          </label>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={2}
+            className="w-full px-4 py-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            required
+          />
+        </div>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-md font-semibold transition"
         >
           🚀 Launch Campaign
         </button>
       </form>
 
-      {/* ✅ AI Message Suggestions */}
-      <MessageGenerator onSelect={(msg) => setMessage(msg)} />
+      {/* AI Suggestions */}
+      <div>
+        <MessageGenerator onSelect={(msg) => setMessage(msg)} />
+      </div>
 
       {result && (
-        <div className="mt-4 bg-green-100 p-3 rounded border border-green-400">
-          <p><strong>✅ Campaign created!</strong></p>
+        <div className="bg-green-100 border border-green-400 text-green-800 p-4 rounded-md shadow-sm animate-fade-in mt-4">
+          <strong>✅ Campaign Created!</strong>
           <p><b>Audience:</b> {result.campaign.audienceSize}</p>
           <p><b>Sent:</b> {result.sent}</p>
           <p><b>Failed:</b> {result.failed}</p>
